@@ -26,10 +26,9 @@ RUN echo uio_pci_generic >> /etc/modules
 
 #ADD files/packagecloud /root/.packagecloud
 #Baseline
-RUN yum clean all
-RUN yum update -y
-RUN yum update -y && yum install -y deltarpm
-RUN yum update -y && yum install -y @base https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+
+RUN yum update -y && yum install -y deltarpm && yum clean all
+RUN yum update -y && yum install -y @base https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && yum clean all
 RUN yum update -y && yum install -y --enablerepo=epel \
 	chrpath \
 	git \
@@ -81,12 +80,14 @@ RUN yum update -y && yum install -y --enablerepo=epel \
     source-highlight \
     rpm \
 	valgrind \
-	yum-utils
+	yum-utils \
+	&& yum clean all
 
 RUN yum update -y && yum install -y --enablerepo=epel \
 	ganglia-devel \
 	libconfuse-devel \
-	mock
+	mock \
+	&& yum clean all
 
 #RUN alternatives --set java /usr/lib/jvm/jre-1.7.0-openjdk.x86_64/bin/java
 #RUN alternatives --set java_sdk_openjdk /usr/lib/jvm/java-1.7.0-openjdk.x86_64
@@ -108,14 +109,16 @@ RUN yum update -y && yum install -y --enablerepo=epel \
     libconfuse-dev \
     libpcap-devel \
     libcap-devel \
-    scapy
+    scapy \
+    && yum clean all
 
 #puppet
 RUN yum update -y && yum install -y --enablerepo=epel \
 	libxml2-devel \
 	libxslt-devel \
 	ruby-devel \
-	zlib-devel
+	zlib-devel \
+	&& yum clean all
 
 
 RUN gem install package_cloud
@@ -140,5 +143,6 @@ RUN yum update -y && yum install -y --enablerepo=epel \
 	rpm-sign \
 	subversion \
 	swig \
-	systemtap 
+	systemtap \
+	&& yum clean all
 
