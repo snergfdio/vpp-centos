@@ -1,20 +1,16 @@
 FROM centos:latest
 MAINTAINER Ed Kern <ejk@cisco.com>
-LABEL Description="VPP centos OS build image" Vendor="cisco.com" Version="1.0"
-
+LABEL Description="VPP centos OS build image" 
+LABEL Vendor="cisco.com" 
+LABEL Version="1.0"
 
 # Setup the environment
 
-#ADD files/pip /tmp/pip
-#ADD files/package.list /tmp/package.list
-#COPY ccache/ubuntu16 /var/ccache
-RUN mkdir /workspace
-RUN mkdir -p /var/ccache
+RUN mkdir /workspace && mkdir -p /etc/ssh && mkdir -p /var/ccache
 
 ENV CCACHE_DIR=/var/ccache
 
 #SSH timeout
-RUN mkdir -p /etc/ssh
 #RUN touch /etc/ssh/ssh_config
 RUN echo "TCPKeepAlive        true" | tee -a /etc/ssh/ssh_config #>/dev/null 2>&1
 RUN echo "ServerAliveCountMax 30"   | tee -a /etc/ssh/ssh_config #>/dev/null 2>&1
@@ -43,13 +39,11 @@ RUN yum update -y && yum install -y --enablerepo=epel \
 	sudo \
 	unzip \
 	xz \
-	wget 
+	wget \
+	&& yum clean all
 
 #packer install
-RUN wget https://releases.hashicorp.com/packer/1.0.0/packer_1.0.0_linux_amd64.zip
-RUN unzip packer_1.0.0_linux_amd64.zip -d /usr/local/bin/
-RUN mv /usr/local/bin/packer /usr/local/bin/packer.io
-
+RUN wget https://releases.hashicorp.com/packer/1.0.0/packer_1.0.0_linux_amd64.zip && unzip packer_1.0.0_linux_amd64.zip -d /usr/local/bin/ && mv /usr/local/bin/packer /usr/local/bin/packer.io
 
 
 RUN yum update -y && yum install -y --enablerepo=epel \
