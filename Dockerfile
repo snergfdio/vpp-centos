@@ -140,3 +140,48 @@ RUN yum update -y && yum install -y --enablerepo=epel \
 	systemtap \
 	&& yum clean all
 
+RUN yum update -y && yum install -y --enablerepo=epel-debuginfo --enablerepo=base-debuginfo \
+	e2fsprogs-debuginfo \
+	glibc-debuginfo \
+	krb5-debuginfo \
+	nss-softokn-debuginfo \
+	openssl-debuginfo \
+	yum-plugin-auto-update-debug-info \
+	zlib-debuginfo \
+	glibc-debuginfo-common \
+	&& yum clean all
+
+RUN yum update -y && groupinstall -y "development tools" \
+	&& yum clean all
+# Libraries needed during compilation to enable all features of Python:
+RUN yum update -y \
+	&& yum install -y --enablerepo=epel \
+	zlib-devel \
+	bzip2-devel \
+	openssl-devel \
+	ncurses-devel \
+	sqlite-devel \
+	readline-devel \
+	tk-devel \
+	gdbm-devel \
+	db4-devel \
+	libpcap-devel \
+	xz-devel \
+	expat-devel \
+	wget \
+	&& yum clean all
+
+# If you are on a clean "minimal" install of CentOS you also need the wget tool:
+
+# Python 2.7.13:
+RUN wget http://python.org/ftp/python/2.7.13/Python-2.7.13.tar.xz \
+    && tar xf Python-2.7.13.tar.xz \
+    && cd Python-2.7.13 \
+    && ./configure --prefix=/usr/local --enable-unicode=ucs4 --enable-shared LDFLAGS="-Wl,-rpath /usr/local/lib" \
+    && make \
+    && make install \
+    && strip /usr/local/lib/libpython2.7.so.1.0 \
+    && cd .. \
+    && rm -rf Python* \
+    && wget https://bootstrap.pypa.io/get-pip.py \
+    && /usr/local/bin/python get-pip.py
