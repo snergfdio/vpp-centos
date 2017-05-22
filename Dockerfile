@@ -151,7 +151,7 @@ RUN yum update -y && yum install -y --enablerepo=epel-debuginfo --enablerepo=bas
 	glibc-debuginfo-common \
 	&& yum clean all
 
-RUN yum update -y && groupinstall -y "development tools" \
+RUN yum update -y && yum groupinstall -y "development tools" \
 	&& yum clean all
 # Libraries needed during compilation to enable all features of Python:
 RUN yum update -y \
