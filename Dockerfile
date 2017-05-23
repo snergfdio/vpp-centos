@@ -87,7 +87,7 @@ RUN yum update -y && yum install -y --enablerepo=epel \
 #RUN alternatives --set java_sdk_openjdk /usr/lib/jvm/java-1.7.0-openjdk.x86_64
 
 RUN pip install --upgrade pip
-RUN pip install pycap
+RUN pip install pycap scapy
 
 RUN yum update -y && yum install -y --enablerepo=epel \
 	autoconf \
