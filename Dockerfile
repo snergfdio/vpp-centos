@@ -169,6 +169,8 @@ RUN yum update -y \
 	xz-devel \
 	expat-devel \
 	wget \
+        clang \
+        llvm \
 	&& yum clean all
 
 # If you are on a clean "minimal" install of CentOS you also need the wget tool:
