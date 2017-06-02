@@ -187,3 +187,5 @@ RUN wget http://python.org/ftp/python/2.7.13/Python-2.7.13.tar.xz \
     && rm -rf Python* \
     && wget https://bootstrap.pypa.io/get-pip.py \
     && /usr/local/bin/python get-pip.py
+
+RUN git clone https://gerrit.fd.io/r/vpp /workspace/centos && /workspace/centos/build-root/vagrant/build.sh && rm -rf /workspace/centos
