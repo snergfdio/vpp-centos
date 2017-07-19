@@ -20,8 +20,6 @@ RUN echo "ServerAliveInterval 10"   | tee -a /etc/ssh/ssh_config #>/dev/null 2>&
 #module
 RUN echo uio_pci_generic >> /etc/modules
 
-#ADD files/packagecloud /root/.packagecloud
-#Baseline
 
 RUN yum update -y && yum install -y deltarpm && yum clean all
 RUN yum update -y && yum install -y @base https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && yum clean all
@@ -172,8 +170,6 @@ RUN yum update -y \
         clang \
         llvm \
 	&& yum clean all
-
-# If you are on a clean "minimal" install of CentOS you also need the wget tool:
 
 # Python 2.7.13:
 RUN wget http://python.org/ftp/python/2.7.13/Python-2.7.13.tar.xz \
