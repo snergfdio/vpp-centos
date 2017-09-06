@@ -184,4 +184,7 @@ RUN wget http://python.org/ftp/python/2.7.13/Python-2.7.13.tar.xz \
     && wget https://bootstrap.pypa.io/get-pip.py \
     && /usr/local/bin/python get-pip.py
 
+RUN mkdir -p /w/workspace && mkdir -p /var/ccache && ln -s /var/ccache /tmp/ccache
+ENV CCACHE_DIR=/var/ccache
+
 #RUN git clone https://gerrit.fd.io/r/vpp /workspace/centos && cd /workspace/centos/build-root; make install-dep && rm -rf /workspace/centos
