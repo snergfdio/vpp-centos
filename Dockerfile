@@ -187,4 +187,4 @@ RUN wget http://python.org/ftp/python/2.7.13/Python-2.7.13.tar.xz \
 RUN mkdir -p /w/workspace && mkdir -p /var/ccache && ln -s /var/ccache /tmp/ccache
 ENV CCACHE_DIR=/var/ccache
 
-RUN git clone https://gerrit.fd.io/r/vpp /workspace/centos && cd /workspace/centos/build-root; make install-dep && rm -rf /workspace/centos
+RUN git clone https://gerrit.fd.io/r/vpp /workspace/centos && cd /workspace/centos/; make install-dep && rm -rf /workspace/centos
