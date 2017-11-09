@@ -167,8 +167,13 @@ RUN yum update -y \
 	xz-devel \
 	expat-devel \
 	wget \
-        clang \
-        llvm \
+    clang \
+    llvm \
+    numactl-devel \
+    check-devel \
+    check \
+    boost \
+    boost-devel \
 	&& yum clean all
 
 # Python 2.7.13:
