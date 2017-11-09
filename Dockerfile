@@ -110,6 +110,7 @@ RUN yum update -y && yum install -y --enablerepo=epel \
 	libxslt-devel \
 	ruby-devel \
 	zlib-devel \
+	gcc-c++ \
 	&& yum clean all
 
 
@@ -121,7 +122,7 @@ RUN yum update -y && yum install -y --enablerepo=epel \
 	diffstat \
 	dwz \
 	flex \
-	gcc-c++ \
+
 	gcc-gfortran \
 	gettext-devel \
 	glibc-static \
