@@ -113,7 +113,7 @@ RUN yum update -y && yum install -y --enablerepo=epel \
 	gcc-c++ \
 	&& yum clean all
 
-
+RUN gem install rake
 RUN gem install package_cloud
 
 RUN yum update -y && yum install -y --enablerepo=epel \
