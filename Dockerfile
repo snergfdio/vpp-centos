@@ -9,6 +9,7 @@ LABEL Version="1.0"
 RUN mkdir /workspace && mkdir -p /etc/ssh && mkdir -p /var/ccache
 
 ENV CCACHE_DIR=/var/ccache
+ENV MAKE_PARALLEL_FLAGS -j 4
 
 #SSH timeout
 #RUN touch /etc/ssh/ssh_config
@@ -190,6 +191,7 @@ RUN wget http://python.org/ftp/python/2.7.13/Python-2.7.13.tar.xz \
     && wget https://bootstrap.pypa.io/get-pip.py \
     && /usr/local/bin/python get-pip.py
 
+RUN pip install six scapy==2.3.3 pyexpect subprocess32 cffi git+https://github.com/klement/py-lispnetworking@setup
 RUN mkdir -p /w/workspace && mkdir -p /var/ccache && ln -s /var/ccache /tmp/ccache
 ENV CCACHE_DIR=/var/ccache
 
