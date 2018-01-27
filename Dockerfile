@@ -42,7 +42,7 @@ RUN yum update -y && yum install -y --enablerepo=epel \
 	&& yum clean all
 
 #packer install
-RUN wget https://releases.hashicorp.com/packer/1.0.0/packer_1.0.0_linux_amd64.zip && unzip packer_1.0.0_linux_amd64.zip -d /usr/local/bin/ && mv /usr/local/bin/packer /usr/local/bin/packer.io
+RUN wget https://releases.hashicorp.com/packer/1.0.0/packer_1.1.3_linux_amd64.zip && unzip packer_1.1.3_linux_amd64.zip -d /usr/local/bin/ && mv /usr/local/bin/packer /usr/local/bin/packer.io
 
 
 RUN yum update -y && yum install -y --enablerepo=epel \
@@ -193,5 +193,6 @@ RUN wget http://python.org/ftp/python/2.7.13/Python-2.7.13.tar.xz \
 RUN pip install six scapy==2.3.3 pyexpect subprocess32 cffi git+https://github.com/klement/py-lispnetworking@setup ply
 RUN mkdir -p /w/workspace && mkdir -p /var/ccache && ln -s /var/ccache /tmp/ccache
 ENV CCACHE_DIR=/var/ccache
+ENV CCACHE_READONLY=true
 
 RUN git clone https://gerrit.fd.io/r/vpp /workspace/centos && cd /workspace/centos/; make UNATTENDED=yes install-dep && rm -rf /workspace/centos
