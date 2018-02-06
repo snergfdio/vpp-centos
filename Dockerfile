@@ -42,7 +42,7 @@ RUN yum update -y && yum install -y --enablerepo=epel \
 	&& yum clean all
 
 #packer install
-RUN wget https://releases.hashicorp.com/packer/1.0.0/packer_1.1.3_linux_amd64.zip && unzip packer_1.1.3_linux_amd64.zip -d /usr/local/bin/ && mv /usr/local/bin/packer /usr/local/bin/packer.io
+RUN wget https://releases.hashicorp.com/packer/1.1.3/packer_1.1.3_linux_amd64.zip && unzip packer_1.1.3_linux_amd64.zip -d /usr/local/bin/ && mv /usr/local/bin/packer /usr/local/bin/packer.io
 
 
 RUN yum update -y && yum install -y --enablerepo=epel \
