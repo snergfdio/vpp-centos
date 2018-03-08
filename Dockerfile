@@ -175,6 +175,7 @@ RUN yum update -y \
     check \
     boost \
     boost-devel \
+    mbedtls-devel \
 	&& yum clean all
 
 # Python 2.7.13:
