@@ -2,7 +2,7 @@ FROM centos:latest
 MAINTAINER Ed Kern <ejk@cisco.com>
 LABEL Description="VPP centos OS build image" 
 LABEL Vendor="cisco.com" 
-LABEL Version="1.0"
+LABEL Version="1.1"
 
 # Setup the environment
 
