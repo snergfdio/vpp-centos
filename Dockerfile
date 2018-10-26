@@ -179,6 +179,7 @@ RUN yum update -y \
     boost \
     boost-devel \
     mbedtls-devel \
+    xmlstarlet \
 	&& yum clean all
 
 # Python 2.7.13:
