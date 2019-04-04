@@ -60,7 +60,6 @@ RUN yum update -y && yum install -y --enablerepo=epel \
 	gcc \
 	graphviz \
 	indent \
-	java-1.8.0-openjdk-devel \
 	kernel-devel \
 	libxml2 \
 	libffi-devel \
