@@ -211,8 +211,9 @@ RUN wget -O /w/Downloads/v0.49.tar.gz http://github.com/01org/intel-ipsec-mb/arc
 
 ADD files/lf-update-java-alternatives /usr/local/bin/lf-update-java-alternatives
 RUN chmod 755 /usr/local/bin/lf-update-java-alternatives
-
-ADD files/fdio-master.repo /etc/yum.repos.d/fdio-master.repo
+RUN curl -s https://packagecloud.io/install/repositories/fdio/master/script.rpm.sh | sudo bash
+#RUN yum update -y && yum install -y vpp-ext-deps
+#ADD files/fdio-master.repo /etc/yum.repos.d/fdio-master.repo
 #RUN yum -y install vpp-dpdk-devel
 RUN mkdir -p /w/workspace/vpp-test-poc-verify-master-centos7 && mkdir -p /home/jenkins
 
