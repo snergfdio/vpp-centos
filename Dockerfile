@@ -1,4 +1,4 @@
-FROM centos:latest
+FROM centos:7.6.1810
 MAINTAINER Ed Kern <ejk@cisco.com>
 LABEL Description="VPP centos OS build image" 
 LABEL Vendor="cisco.com" 
@@ -13,6 +13,8 @@ ENV MAKE_PARALLEL_FLAGS -j 4
 ENV VPP_ZOMBIE_NOCHECK=1
 ENV DPDK_DOWNLOAD_DIR=/w/Downloads
 ENV VPP_PYTHON_PREFIX=/var/cache/vpp/python
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
+ENV NOTVISIBLE "in users profile"
 
 #SSH timeout
 #RUN touch /etc/ssh/ssh_config
@@ -20,12 +22,15 @@ RUN echo "TCPKeepAlive        true" | tee -a /etc/ssh/ssh_config #>/dev/null 2>&
 RUN echo "ServerAliveCountMax 30"   | tee -a /etc/ssh/ssh_config #>/dev/null 2>&1
 RUN echo "ServerAliveInterval 10"   | tee -a /etc/ssh/ssh_config #>/dev/null 2>&1
 
+# Configure locales
+#RUN localectl set-locale "en_US.UTF-8" \
+# && localectl status
 
 #module
 RUN echo uio_pci_generic >> /etc/modules
 
 
-RUN yum update -y && yum install -y deltarpm && yum clean all
+#RUN yum update -y && yum install -y deltarpm && yum clean all
 RUN yum update -y && yum install -y @base https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && yum clean all
 RUN yum update -y && yum install -y --enablerepo=epel \
 	chrpath \
@@ -36,8 +41,8 @@ RUN yum update -y && yum install -y --enablerepo=epel \
 	lcov \
 	make \
 	nasm \
-	perl-XML-XPath \
-	puppet \
+#	perl-XML-XPath \
+#	puppet \
 	sudo \
 	unzip \
 	xz \
@@ -45,7 +50,7 @@ RUN yum update -y && yum install -y --enablerepo=epel \
 	&& yum clean all
 
 #packer install
-RUN wget https://releases.hashicorp.com/packer/1.1.3/packer_1.1.3_linux_amd64.zip && unzip packer_1.1.3_linux_amd64.zip -d /usr/local/bin/ && mv /usr/local/bin/packer /usr/local/bin/packer.io
+#RUN wget https://releases.hashicorp.com/packer/1.1.3/packer_1.1.3_linux_amd64.zip && unzip packer_1.1.3_linux_amd64.zip -d /usr/local/bin/ && mv /usr/local/bin/packer /usr/local/bin/packer.io
 
 
 RUN yum update -y && yum install -y --enablerepo=epel \
@@ -115,6 +120,37 @@ RUN yum update -y && yum install -y --enablerepo=epel \
 	zlib-devel \
 	gcc-c++ \
 	&& yum clean all
+
+#outdated ruby pos
+RUN yum update -y && yum install -y --enablerepo=epel \
+	git-core \
+	zlib \
+	zlib-devel \
+	gcc-c++ \
+	patch \
+	readline \
+	readline-devel \
+	libyaml-devel \
+	libffi-devel \
+	openssl-devel \
+	make \
+	bzip2 \
+	autoconf \
+	automake \
+	libtool \
+	bison \
+	curl \
+	sqlite-devel \
+	&& yum clean all
+
+ENV PATH="/root/.rbenv/bin:${PATH}"
+ENV PATH="/root/.rbenv/shims:${PATH}"
+
+RUN curl -sL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash - 
+RUN rbenv init -
+RUN rbenv install 2.5.1 && rbenv global 2.5.1
+#&& echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc && echo 'eval "$(rbenv init -)"' >> ~/.bashrc &&
+
 
 RUN gem install rake
 RUN gem install package_cloud
@@ -200,9 +236,6 @@ ENV CCACHE_DIR=/var/ccache
 ENV CCACHE_READONLY=true
 RUN mkdir -p /var/cache/vpp/python
 RUN mkdir -p /w/Downloads
-#RUN wget -O /w/Downloads/nasm-2.13.01.tar.xz http://www.nasm.us/pub/nasm/releasebuilds/2.13.01/nasm-2.13.01.tar.xz
-#RUN wget -O /w/Downloads/dpdk-18.02.tar.xz http://fast.dpdk.org/rel/dpdk-18.02.tar.xz
-#RUN wget -O /w/Downloads/dpdk-17.11.tar.xz http://fast.dpdk.org/rel/dpdk-17.11.tar.xz
 RUN wget -O /w/Downloads/dpdk-18.02.1.tar.xz http://dpdk.org/browse/dpdk-stable/snapshot/dpdk-stable-18.02.1.tar.xz
 RUN wget -O /w/Downloads/dpdk-18.05.tar.xz http://dpdk.org/browse/dpdk/snapshot/dpdk-18.05.tar.xz
 RUN wget -O /w/Downloads/v0.47.tar.gz http://github.com/01org/intel-ipsec-mb/archive/v0.47.tar.gz
@@ -212,9 +245,111 @@ RUN wget -O /w/Downloads/v0.49.tar.gz http://github.com/01org/intel-ipsec-mb/arc
 ADD files/lf-update-java-alternatives /usr/local/bin/lf-update-java-alternatives
 RUN chmod 755 /usr/local/bin/lf-update-java-alternatives
 RUN curl -s https://packagecloud.io/install/repositories/fdio/master/script.rpm.sh | sudo bash
-#RUN yum update -y && yum install -y vpp-ext-deps
-#ADD files/fdio-master.repo /etc/yum.repos.d/fdio-master.repo
-#RUN yum -y install vpp-dpdk-devel
-RUN mkdir -p /w/workspace/vpp-test-poc-verify-master-centos7 && mkdir -p /home/jenkins
 
-RUN git clone https://gerrit.fd.io/r/vpp /workspace/centos && cd /workspace/centos/; make UNATTENDED=yes install-dep && rm -rf /workspace/centos
+
+#include bits from csit-sut
+RUN yum install -y \
+        # general tools
+        bridge-utils \
+        cloud-init \
+        net-tools \
+        openssh-server \
+        pciutils \
+        rsyslog \
+        ssh \
+        sudo \
+        supervisor \
+        tar \
+        vim \
+        wget \
+        python-devel \
+        openssh-clients \
+        # csit requirements
+        gcc \
+        cmake3 \
+        docker-1.13 \
+        libpcap-devel \
+        libpython-devel-2.7 \
+        libpython-devel \
+        openjdk-8-jdk-headless \
+        python-pip \
+        python-devel-2.7 \
+        python-virtualenv \
+        socat \
+        strongswan \
+        unzip \
+        tcpdump \
+        zlib-devel \
+        # vpp requirements
+        ca-certificates-2018 \
+        libapr1 \
+        mbedtls \
+        mbedtls-devel \
+        libnuma1 \
+        python-cffi \
+        python36-cffi \
+        python-enum34 \
+        git \
+        sshpass
+
+# Configure locales
+#RUN localectl set-locale "en_US.UTF-8" \
+# && localectl status
+
+# Fix permissions
+# RUN chown root:syslog /var/log \
+# && chmod 755 /etc/default
+
+# Create directory structure
+RUN mkdir -p /tmp/dumps \
+ && mkdir -p /var/cache/vpp/python \
+ && mkdir -p /var/run/sshd
+
+# CSIT PIP pre-cache
+RUN pip install \
+        docopt==0.6.2 \
+        ecdsa==0.13 \
+        enum34==1.1.2 \
+        ipaddress==1.0.16 \
+        paramiko==1.16.0 \
+        pexpect==4.6.0 \
+        ptyprocess==0.6.0 \
+        pycrypto==2.6.1 \
+        pykwalify==1.5.0 \
+        pypcap==1.1.5 \
+        python-dateutil==2.4.2 \
+        PyYAML==3.11 \
+        requests==2.9.1 \
+        robotframework==2.9.2 \
+        scapy==2.3.3 \
+        scp==0.10.2 \
+        six==1.12.0 \
+        dill==0.2.8.2 \
+        numpy==1.14.5 \
+        scipy==1.1.0
+
+# VPP PIP pre-cache
+RUN pip install \
+        aenum
+
+# SSH settings
+RUN echo 'root:Csit1234' | chpasswd \
+ && sed -i 's/#PermitRootLogin yes/PermitRootLogin yes/' /etc/ssh/sshd_config \
+ && sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd \
+ && echo "export VISIBLE=now" >> /etc/profile
+
+ADD files/sshconfig /root/.ssh/config
+ADD files/badkey /root/.ssh/id_rsa
+RUN chmod 600 /root/.ssh/id_rsa
+RUN mv /usr/bin/sar /usr/bin/sar.old && ln -s /bin/true /usr/bin/sar
+RUN ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa -N '' && ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa -N '' && ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519 -N ''
+
+#include bits from registry image
+RUN rm -rf /home/jenkins && useradd -ms /bin/bash jenkins && chown -R jenkins /w && chown -R jenkins /var/ccache && chown -R jenkins /var/cache/vpp && mv /usr/bin/sar /usr/bin/sar.old && ln -s /bin/true /usr/bin/sar
+ADD files/jenkins /etc/sudoers.d/jenkins
+ENV PATH=/root/.local/bin:/home/jenkins/.local/bin:${PATH}
+
+#csit-sut ssh bits for the end
+EXPOSE 22
+
+CMD ["sh", "-c", "rm -f /dev/shm/db /dev/shm/global_vm /dev/shm/vpe-api; /usr/bin/supervisord -c /etc/supervisord/supervisord.conf; /usr/sbin/sshd -D"]
