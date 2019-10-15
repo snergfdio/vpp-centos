@@ -290,7 +290,9 @@ RUN yum install -y \
         python36-cffi \
         python-enum34 \
         git \
-        sshpass
+        sshpass \
+        facter \
+      	&& yum clean all
 
 # Configure locales
 #RUN localectl set-locale "en_US.UTF-8" \
