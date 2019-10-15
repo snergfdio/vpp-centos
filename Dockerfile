@@ -292,6 +292,12 @@ RUN yum install -y \
         git \
         sshpass \
         facter \
+        devtoolset-7 \
+        ninja-build \
+        python3-devel \
+        python36-jsonschema \
+        selinux-policy \
+        selinux-policy-devel \
       	&& yum clean all
 
 # Configure locales
