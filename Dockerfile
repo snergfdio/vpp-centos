@@ -215,6 +215,7 @@ RUN yum update -y \
     boost-devel \
     mbedtls-devel \
     xmlstarlet \
+    centos-release-scl \
 	&& yum clean all
 
 # Python 2.7.13:
