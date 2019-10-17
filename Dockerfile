@@ -299,6 +299,7 @@ RUN yum install -y \
         python36-jsonschema \
         selinux-policy \
         selinux-policy-devel \
+        mbedtls-debuginfo \
       	&& yum clean all
 
 # Configure locales
@@ -351,11 +352,12 @@ ADD files/sshconfig /root/.ssh/config
 ADD files/badkey /root/.ssh/id_rsa
 RUN chmod 600 /root/.ssh/id_rsa
 RUN mv /usr/bin/sar /usr/bin/sar.old && ln -s /bin/true /usr/bin/sar
-RUN ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa -N '' && ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa -N '' && ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519 -N ''
+RUN ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N '' && ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N '' && ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ''
 
 #include bits from registry image
 RUN rm -rf /home/jenkins && useradd -ms /bin/bash jenkins && chown -R jenkins /w && chown -R jenkins /var/ccache && chown -R jenkins /var/cache/vpp && mv /usr/bin/sar /usr/bin/sar.old && ln -s /bin/true /usr/bin/sar
 ADD files/jenkins /etc/sudoers.d/jenkins
+ADD files/supervisord.conf /etc/supervisord/supervisord.conf
 ENV PATH=/root/.local/bin:/home/jenkins/.local/bin:${PATH}
 
 #csit-sut ssh bits for the end
