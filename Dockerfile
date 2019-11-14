@@ -216,6 +216,7 @@ RUN yum update -y \
     mbedtls-devel \
     xmlstarlet \
     centos-release-scl \
+    yamllint \
 	&& yum clean all
 
 # Python 2.7.13:
